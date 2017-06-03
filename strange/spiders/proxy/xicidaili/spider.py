@@ -7,6 +7,13 @@ from strange.items.proxy.items import ProxyItem
 
 class XiciDaili(CrawlSpider):
     name = 'xicidaili'
+
+    custom_settings = {
+        'ITEM_PIPELINES': {
+            'strange.pipelines.proxy.pipelines.ProxyPipeline': 300
+        }
+    }
+
     allowed_domains = ['xicidaili.com']
 
     start_urls = ['http://www.xicidaili.com/nn/']

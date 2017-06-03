@@ -1,4 +1,3 @@
-
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from pyquery import PyQuery as pq
@@ -8,6 +7,13 @@ from strange.items.proxy.items import ProxyItem
 
 class KuaiDaiLi(CrawlSpider):
     name = 'kuaidaili'
+
+    custom_settings = {
+        'ITEM_PIPELINES': {
+            'strange.pipelines.proxy.pipelines.ProxyPipeline': 300
+        }
+    }
+
     allowed_domains = ['kuaidaili.com']
 
     start_urls = ['http://www.kuaidaili.com/proxylist/1/']

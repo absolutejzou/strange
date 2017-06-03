@@ -17,6 +17,7 @@ metadata = MetaData(engine)
 Base = declarative_base(metadata=metadata)
 
 from strange.database.proxy.models import Proxy
+from strange.database.neteasemusic.models import PlayList, Song, Artist, Album
 
 
 metadata.create_all()

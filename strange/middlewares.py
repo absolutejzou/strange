@@ -102,6 +102,13 @@ class ProxyMiddleware(object):
 
 class PhantomJSMiddleware(object):
     def __init__(self):
+       pass
+
+    def __del__(self):
+        if self.driver:
+            self.driver.quit()
+
+    def process_request(self, request, spider):
         service_args = ['--load-images=false', '--disk-cache=true']
 
         dcap = DesiredCapabilities.PHANTOMJS
@@ -117,11 +124,6 @@ class PhantomJSMiddleware(object):
                                           service_args=service_args,
                                           desired_capabilities=dcap)
 
-    def __del__(self):
-        if self.driver:
-            self.driver.quit()
-
-    def process_request(self, request, spider):
         if spider.name == 'neteasemusic':
             self.driver.get(request.url)
             self.driver.switch_to.frame('g_iframe')

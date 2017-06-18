@@ -113,6 +113,8 @@ class NetEaseMusic(CrawlSpider):
         if not comment:
             return
         comment_count = comment[0].text
+        if not comment_count.isdigit():
+            comment_count = None
 
         # img
         cvrwrap = html('div').filter('.cvrwrap')
@@ -137,7 +139,7 @@ class NetEaseMusic(CrawlSpider):
         html = pq(response.body)
 
         # name
-        btm = html('div').fliter('.btm')
+        btm = html('div').filter('.btm')
         if not btm:
             return
         artist_name = btm('h2').filter('#artist-name')

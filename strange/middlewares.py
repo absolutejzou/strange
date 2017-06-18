@@ -5,13 +5,12 @@
 # See documentation in:
 # http://doc.scrapy.org/en/latest/topics/spider-middleware.html
 import random
+import requests
 
 from scrapy import signals
 from scrapy.conf import settings
 from scrapy.downloadermiddlewares.useragent import UserAgentMiddleware
 from scrapy.http import HtmlResponse
-from selenium import webdriver
-from selenium.webdriver import DesiredCapabilities
 from sqlalchemy import func
 from strange.database import Proxy
 from strange.database.session import Session
@@ -100,36 +99,24 @@ class ProxyMiddleware(object):
             request.headers.setdefault(b'proxy', p)
 
 
-class PhantomJSMiddleware(object):
-    def __init__(self):
-       pass
-
-    def __del__(self):
-        if self.driver:
-            self.driver.quit()
+class NetEaseMusicMiddleware(object):
 
     def process_request(self, request, spider):
-        service_args = ['--load-images=false', '--disk-cache=true']
-
-        dcap = DesiredCapabilities.PHANTOMJS
-        user_agent = ('Mozilla/5.0 (Windows NT 6.1; rv:2.0.1) '
-                      'Gecko/20100101 Firefox/4.0.1')
-        dcap["phantomjs.page.settings.userAgent"] = user_agent
-        dcap['browserName'] = user_agent.split('/')[0]
-        dcap['platform'] = 'Windows'
-        dcap['version'] = user_agent.split(' ')[0].split('/')[1]
-
-        self.driver = webdriver.PhantomJS(executable_path=
-                                          settings.get('PHANTOMJS_DRIVER'),
-                                          service_args=service_args,
-                                          desired_capabilities=dcap)
-
         if spider.name == 'neteasemusic':
-            self.driver.get(request.url)
-            self.driver.switch_to.frame('g_iframe')
-            body = self.driver.page_source.encode('utf-8')
-            current_url = self.driver.current_url
-
-            return HtmlResponse(current_url, body=body,
-                               encoding='utf-8', request=request)
+            proxies = None
+            headers = requests.utils.default_headers()
+            if 'proxy' in request.headers:
+                proxy = request.headers.get('proxy')
+                type = proxy.split(b':')[0]
+                proxies = {type: proxy,}
+            if 'User-Agent' in request.headers:
+                user_agent = request.headers.get('User-Agent')
+                headers.update({
+                    'User-Agent': user_agent,
+                })
+            c = requests.get(request.url.replace('/#', ''), proxies=proxies,
+                             headers=headers)
+            content = c.content
+            return HtmlResponse(request.url, body=content,
+                                encoding='utf-8',request=request)
         return

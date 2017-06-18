@@ -59,7 +59,7 @@ DOWNLOADER_MIDDLEWARES = {
     'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware': 110,
     'strange.middlewares.ProxyMiddleware': 100,
     'strange.middlewares.RandomUserAgentMiddleware': 200,
-    'strange.middlewares.PhantomJSMiddleware': 1000,
+    'strange.middlewares.NetEaseMusicMiddleware': 300,
 }
 
 # Enable or disable extensions
@@ -99,5 +99,3 @@ ITEM_PIPELINES = {
 SETTING_FILE_PATH = os.path.split(os.path.realpath(__file__))[0]
 
 USER_AGENT_FILE = os.path.join(SETTING_FILE_PATH, 'useragent.txt')
-
-PHANTOMJS_DRIVER = os.path.join(SETTING_FILE_PATH, 'scripts/phantomjs')

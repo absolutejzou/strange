@@ -47,7 +47,7 @@ class NetEaseMusicPipeline(object):
         album = Album(id=item['id'],
                       name=item['name'],
                       artist=item['artist'],
-                      publist_at=datetime.strptime(item['publish_date'],
+                      publish_at=datetime.strptime(item['publish_date'],
                                                    '%Y-%m-%d'))
 
         self.session.merge(album)

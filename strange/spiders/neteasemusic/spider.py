@@ -29,6 +29,7 @@ class NetEaseMusic(CrawlSpider):
              callback='parse_artist', follow=True),
         Rule(LinkExtractor(allow=('/album\?id=', )),
              callback='parse_album', follow=True),
+        Rule(LinkExtractor(allow=('/playlist\?cat=', ))),
     )
 
     def get_url_id(self, url):

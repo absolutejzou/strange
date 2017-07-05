@@ -1,3 +1,10 @@
+import os
+import sys
+from os.path import dirname
+
+_env_path = dirname(dirname(dirname(os.path.abspath(__file__))))
+sys.path.append(_env_path)
+
 import socket
 import urllib.request
 from datetime import timedelta, datetime

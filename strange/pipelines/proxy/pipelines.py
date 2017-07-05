@@ -1,6 +1,7 @@
 from datetime import datetime
 from scrapy.exceptions import DropItem
 from strange.database import Proxy
+from strange.database.proxy.choices import ProxyStatus
 from strange.database.session import Session
 
 
@@ -15,6 +16,7 @@ class ProxyPipeline(object):
         exist = (self.session
                  .query(Proxy)
                  .filter(Proxy.ip == item['ip'])
+                 .filter(Proxy.status == ProxyStatus.Available)
                  .count())
         if exist:
             return DropItem('drop item, ip exist: %s' % item['ip'])
